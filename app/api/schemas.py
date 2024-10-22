@@ -8,8 +8,17 @@ class SQLAlchemyStandart(BaseModel):
 class User(SQLAlchemyStandart):
     email:EmailStr
     username:str
-    hashed_password:str
+
+class UserWithPassword(User):
+    password:str
    
 
 class Picture(SQLAlchemyStandart):
     binary_picture:bin
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: str
