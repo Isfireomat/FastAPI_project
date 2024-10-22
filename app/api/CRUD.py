@@ -14,5 +14,5 @@ async def create_picture(db:AsyncSession,pictur: schemas.Picture):
 async def validate_user(db: AsyncSession, user_email:EmailStr, password:str):
     return await hash(password)==db.execute(select(models.user.c.hashed_password).where(models.user.c.email==user_email))
 
-async def get_user(db: AsyncSession, user_id: int):
-    return await db.execute(select(models.user).where(models.user.c.id==user_id)).first()
+async def get_user(db: AsyncSession, user_email: EmailStr):
+    return await db.execute(select(models.user).where(models.user.c.email==user_email)).first()

@@ -1,0 +1,25 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="post" action="/api/login/">
+        <label for="user_email">Username:</label>
+        <input type="text" id="user_email" name="user_email" required><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    {% if error %}
+    <p style="color:red">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
