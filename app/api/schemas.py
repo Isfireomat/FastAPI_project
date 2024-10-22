@@ -5,6 +5,10 @@ class SQLAlchemyStandart(BaseModel):
     class Config:
         orm_mode=True
 
+class EmailPasswordRequestForm(BaseModel):
+    email: str
+    password: str
+
 class User(SQLAlchemyStandart):
     email:EmailStr
     username:str
@@ -14,7 +18,7 @@ class UserWithPassword(User):
    
 
 class Picture(SQLAlchemyStandart):
-    binary_picture:bin
+    binary_picture:bytes
 
 class Token(BaseModel):
     access_token: str

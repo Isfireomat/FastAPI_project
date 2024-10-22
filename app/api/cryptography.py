@@ -18,27 +18,25 @@ def get_password_hash(password):
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
-    if expires_delta: expire = datetime.utcnow() + expires_delta
-    else:             expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": datetime.utcnow() + (expires_delta or timedelta(minutes=15))})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)):
     token = request.cookies.get("access_token")
 
-    if not token: return redirect_to_login
+    if not token: return redirect_to_login()
     
     token = token.split(" ")[1] if " " in token else token
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_email: str = payload.get("sub")
-        if user_email is None: return redirect_to_login
+        if user_email is None: return redirect_to_login()
     except JWTError:
-        return redirect_to_login
+        return redirect_to_login()
     
-    user = get_user(db, user_email=user_email)
-    if user is None:    return redirect_to_login
+    user = await get_user(db, user_email=user_email)
+    if user is None:    return redirect_to_login()
     
     return user
