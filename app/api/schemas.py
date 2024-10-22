@@ -6,7 +6,7 @@ class SQLAlchemyStandart(BaseModel):
         orm_mode=True
 
 class EmailPasswordRequestForm(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 class User(SQLAlchemyStandart):
