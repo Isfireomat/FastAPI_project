@@ -15,7 +15,6 @@ class User(SQLAlchemyStandart):
 
 class UserWithPassword(User):
     password:str
-   
 
 class Picture(SQLAlchemyStandart):
     binary_picture:bytes

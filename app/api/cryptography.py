@@ -6,6 +6,7 @@ from api.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import RedirectResponse
 from CRUD import get_user
+from datetime import datetime, timezone
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "This_is_your_secret_key"
@@ -32,7 +33,9 @@ async def get_current_user(request: Request, db: AsyncSession = Depends(get_db))
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_email: str = payload.get("sub")
-        if user_email is None: return redirect_to_login()
+        exp = datetime.fromtimestamp(payload.get("exp"), tz=timezone.utc) 
+        if not exp: redirect_to_login()
+        if user_email is None or exp < datetime.utcnow(): return redirect_to_login()
     except JWTError:
         return redirect_to_login()
     
