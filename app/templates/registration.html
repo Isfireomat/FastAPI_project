@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles/styles.css">
-    <title>Авторизация</title>
+    <title>Регистрация</title>
 </head>
 <body>
     <div class="container">
         <div class="form-container">
-            <form id="login-form">
-                <h2>Авторизация</h2>
+            <form id="registration-form">
+                <h2>Регистрация</h2>
+                <input type="text" placeholder="Имя" name="name" required>
                 <input type="email" placeholder="Email" name="email" required>
                 <input type="password" placeholder="Пароль" name="password" required>
-                <button type="submit">Войти</button>
-                <p>Нет аккаунта? <a href="/registration">Зарегистрируйтесь</a></p>
+                <button type="submit">Зарегистрироваться</button>
+                <p>Уже есть аккаунт? <a href="/login">Авторизуйтесь</a></p>
             </form>
         </div>
     </div>
