@@ -1,10 +1,21 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import insert
 from pydantic import EmailStr
-from api import models, schemas, cryptography
+from app.api import models, schemas
+from passlib.context import CryptContext
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+ 
+async def get_password_hash(password):
+    return pwd_context.hash(password)
 
 async def create_user(db: AsyncSession, user: schemas.UserWithPassword):
-    db.add(models.user(name=user.name, email=user.email, hashed_password=cryptography.get_password_hash(user.password)))
+    stmt = insert(models.user).values(
+        email=user.email,
+        username=user.name,
+        hashed_password=await get_password_hash(user.password)
+    )
+    await db.execute(stmt)
     await db.commit()
 
 async def create_picture(db:AsyncSession,pictur: schemas.Picture):
@@ -12,4 +23,6 @@ async def create_picture(db:AsyncSession,pictur: schemas.Picture):
     await db.commit()
 
 async def get_user(db: AsyncSession, user_email: EmailStr):
-    return await db.execute(select(models.user).where(models.user.c.email==user_email)).scalar_one_or_none().first()
+    result=await db.execute(select(models.user).where(models.user.c.email==user_email))
+    return result.first()
+    

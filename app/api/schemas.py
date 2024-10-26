@@ -11,7 +11,7 @@ class EmailPasswordRequestForm(BaseModel):
 
 class User(SQLAlchemyStandart):
     email:EmailStr
-    username:str
+    name:str
 
 class UserWithPassword(User):
     password:str

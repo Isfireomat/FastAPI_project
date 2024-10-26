@@ -1,23 +1,20 @@
-from passlib.context import CryptContext
+
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status, Request
-from api.database import get_db
+from app.api.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import RedirectResponse
-from CRUD import get_user
+from app.api.CRUD import get_user
 from datetime import datetime, timezone
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 SECRET_KEY = "This_is_your_secret_key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 redirect_to_login = lambda:RedirectResponse(url="/login")
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-def create_access_token(data: dict, expires_delta: timedelta = None):
+async def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     to_encode.update({"exp": datetime.utcnow() + (expires_delta or timedelta(minutes=15))})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
