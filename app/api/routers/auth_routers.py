@@ -11,13 +11,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.post("/api/register/")
 async def register(user: schemas.UserWithPassword, db: AsyncSession = Depends(get_db)):
+    print(user.dict)
     db_user = await CRUD.get_user(db, user_email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     await CRUD.create_user(db=db, user=user)
+    return {"message": "User registered successfully!"}
 
-@router.post("/login", response_model=schemas.Token)
-async def login(response: Response,form_data: schemas.EmailPasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+@router.post("/api/login", response_model=schemas.Token)
+async def login(response: Response,form_data: schemas.EmailPasswordRequestForm, db: AsyncSession = Depends(get_db)):
     user = await CRUD.get_user(db, user_email=form_data.email)
     if not user or not CRUD.pwd_context.verify(form_data.password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})

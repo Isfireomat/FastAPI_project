@@ -22,20 +22,16 @@ async def create_access_token(data: dict, expires_delta: timedelta = None):
 
 async def get_current_user(request: Request, db: AsyncSession = Depends(get_db)):
     token = request.cookies.get("access_token")
-
     if not token: return redirect_to_login()
-    
     token = token.split(" ")[1] if " " in token else token
-
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_email: str = payload.get("sub")
         exp = datetime.fromtimestamp(payload.get("exp"), tz=timezone.utc) 
         if not exp: redirect_to_login()
-        if user_email is None or exp < datetime.utcnow(): return redirect_to_login()
+        if user_email is None or exp < datetime.now(timezone.utc): return redirect_to_login()
     except JWTError:
         return redirect_to_login()
-    
     user = await get_user(db, user_email=user_email)
     if user is None:    return redirect_to_login()
     

@@ -13,8 +13,10 @@ class User(SQLAlchemyStandart):
     email:EmailStr
     name:str
 
-class UserWithPassword(User):
-    password:str
+class UserWithPassword(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
 
 class Picture(SQLAlchemyStandart):
     binary_picture:bytes
