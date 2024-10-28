@@ -1,14 +1,12 @@
 from os import environ
+from alembic import context
 from dotenv import load_dotenv
-load_dotenv()
-from app.api.models import metadata
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from app.api.models import Base
 
-from alembic import context
-
+load_dotenv()
 config = context.config
 
 section=config.config_ini_section
@@ -21,7 +19,7 @@ config.set_section_option(section,"DB_NAME",environ.get("DB_NAME"))
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = metadata
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:

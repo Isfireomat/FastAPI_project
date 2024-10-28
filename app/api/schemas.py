@@ -18,7 +18,7 @@ class UserWithPassword(BaseModel):
     email: EmailStr
     password: str
 
-class Picture(SQLAlchemyStandart):
+class Picture(BaseModel):
     binary_picture:bytes
 
 class Token(BaseModel):

@@ -1,19 +1,19 @@
-from sqlalchemy import MetaData, Table, Column, Integer, String, LargeBinary
+from sqlalchemy import Column, Integer, String, LargeBinary
+from sqlalchemy.ext.declarative import declarative_base
+from typing import Optional
 
-metadata=MetaData()
+Base = declarative_base()
 
-user=Table(
-    'user',
-    metadata,
-    Column('id',Integer,primary_key=True),
-    Column('email',String,nullable=False,unique=True),
-    Column('username',String,nullable=False),
-    Column('hashed_password',String,nullable=False)
-)
+class User(Base):
+    __tablename__ = 'users'
+    
+    id: int = Column(Integer, primary_key=True) 
+    email: str = Column(String, nullable=False, unique=True)  
+    name: str = Column(String, nullable=False)
+    hashed_password: str = Column(String, nullable=False)
 
-pictur=Table( 
-    'picture',
-    metadata,
-    Column('id',Integer,primary_key=True),
-    Column('binary_picture',LargeBinary,nullable=False)
-)
+class Picture(Base):
+    __tablename__ = 'pictures'
+    
+    id: int = Column(Integer, primary_key=True) 
+    binary_picture: bytes = Column(LargeBinary, nullable=False) 
