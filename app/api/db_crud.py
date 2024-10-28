@@ -26,5 +26,5 @@ async def create_picture(session: AsyncSession, picture: schemas.Picture) -> Non
     await session.commit()
 
 async def get_user(session: AsyncSession, user_email: EmailStr) -> Optional[models.User]: 
-    result = await session.execute(select(models.User).where(models.User.c.email == user_email)) 
+    result = await session.execute(select(models.User).where(models.User.email == user_email)) 
     return result.scalar_one_or_none() 

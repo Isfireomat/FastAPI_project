@@ -21,7 +21,7 @@ document.getElementById('registration-form').addEventListener('submit', async fu
         });
 
         if (response.ok) {
-            window.location.href = "/login"; 
+            window.location.href = "/"; 
         } else {
             const error = await response.json();
             console.error('Ошибка регистрации:', error);

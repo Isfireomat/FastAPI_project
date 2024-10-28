@@ -8,12 +8,23 @@ from app.api import token_utils
 
 router = APIRouter()
 @router.post("/api/register/", response_model=dict[str, str])
-async def register(user: schemas.UserWithPassword,
+async def register(response: Response, user: schemas.UserWithPassword,
                    session: AsyncSession = Depends(get_session)) -> dict[str, str]:
     db_user = await db_crud.get_user(session, user_email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     await db_crud.create_user(session=session, user=user)
+    access_token_expires = timedelta(minutes=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = await token_utils.create_access_token(data={"sub": user.email}, 
+                                                         expires_delta=access_token_expires)
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    )
     return {"message": "User registered successfully!"}
 
 @router.post("/api/login", response_model=schemas.Token)
@@ -26,11 +37,9 @@ async def login(response: Response, form_data: schemas.EmailPasswordRequestForm,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"}
         )
-    
     access_token_expires = timedelta(minutes=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = await token_utils.create_access_token(data={"sub": user.email}, 
                                                          expires_delta=access_token_expires)
-
     response.set_cookie(
         key="access_token",
         value=f"Bearer {access_token}",
@@ -39,7 +48,6 @@ async def login(response: Response, form_data: schemas.EmailPasswordRequestForm,
         samesite="lax",
         max_age=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
-    
     return {
         "access_token": access_token,
         "token_type": "bearer",
