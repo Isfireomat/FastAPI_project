@@ -10,6 +10,7 @@ header {
     padding: 10px;
     background-color: #f5f5f5;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Отступ между заголовком и контентом */
 }
 
 .logout-button {
@@ -24,4 +25,42 @@ header {
 
 .logout-button:hover {
     background-color: #ff3333;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрирование по горизонтали */
+    justify-content: center; /* Центрирование по вертикали */
+    min-height: 100vh; /* Высота на весь экран */
+    margin: 0; /* Убираем отступы */
+}
+
+#drop-area {
+    width: 90%; /* Ширина области загрузки */
+    height: 80vh; /* Высота области загрузки (80% высоты окна) */
+    border: 2px dashed #4CAF50; /* Цвет обводки */
+    border-radius: 10px;
+    margin: 20px;
+    transition: background-color 0.3s;
+    display: flex; /* Используем flex для центрирования содержимого внутри области */
+    align-items: center; /* Центрирование по вертикали */
+    justify-content: center; /* Центрирование по горизонтали */
+    position: relative; /* Для позиционирования миниатюры */
+    overflow: hidden; /* Скрываем излишки, если изображение выходит за пределы */
+}
+
+#drop-area.highlight {
+    background-color: #e9f9e9; /* Цвет фона при перетаскивании */
+}
+
+#file-input {
+    display: none; /* Скрываем стандартное поле для выбора файла */
+}
+
+.thumbnail {
+    width: 100%; /* Ширина миниатюры */
+    height: 100%; /* Высота миниатюры */
+    object-fit: cover; /* Сохранение пропорций и заполнение области */
+    display: none; /* Скрываем миниатюру по умолчанию */
 }

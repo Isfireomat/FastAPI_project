@@ -28,3 +28,12 @@ async def create_picture(session: AsyncSession, picture: schemas.Picture) -> Non
 async def get_user(session: AsyncSession, user_email: EmailStr) -> Optional[models.User]: 
     result = await session.execute(select(models.User).where(models.User.email == user_email)) 
     return result.scalar_one_or_none() 
+
+async def get_picture_by_bytes(session: AsyncSession, binary_picture: bytes) -> Optional[models.Picture]: 
+    result = await session.execute(select(models.Picture).where(models.Picture.binary_picture == binary_picture)) 
+    return result.scalar_one_or_none() 
+
+async def get_pictures(session: AsyncSession) -> Optional[models.Picture]: 
+    result = await session.execute(select(models.Picture.binary_picture)) 
+    pictures = result.scalars().all()
+    return pictures if pictures else None
