@@ -64,3 +64,13 @@ main {
     object-fit: cover; /* Сохранение пропорций и заполнение области */
     display: none; /* Скрываем миниатюру по умолчанию */
 }
+
+#plagiarism-result {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}

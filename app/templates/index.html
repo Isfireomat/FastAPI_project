@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная страница</title>
-    <link rel="stylesheet" href="/static/styles/index.css?v=1.0.1">
+    <link rel="stylesheet" href="/static/styles/index.css?v=1.0.2">
 </head>
 <body>
     <header>
@@ -18,6 +18,7 @@
             <p id="drop-text">Перетащите файл сюда или нажмите для выбора</p>
             <input type="file" id="file-input" accept="image/*" required>
         </div>
+        <p id="plagiarism-result"></p>
     </main>
 
     <script src="/static/scripts/logout.js"></script>
@@ -84,25 +85,26 @@
         }
 
         function uploadFile(file) {
-            const formData = new FormData();
-            formData.append('photo', file);
+    const formData = new FormData();
+    formData.append('photo', file);
 
-            fetch('/api/upload', { 
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Фотография успешно загружена!');
-                } else {
-                    alert('Ошибка загрузки фотографии.');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                alert('Произошла ошибка при загрузке.');
-            });
+    fetch('/api/upload', { 
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json()) // Предполагаем, что сервер вернёт JSON
+    .then(data => {
+        if (data.result !== undefined) {
+            document.getElementById('plagiarism-result').textContent = `Плагиат на ${data.result} %`;
+        } else {
+            alert('Фотография успешно загружена, но данные плагиата не получены.');
         }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при загрузке.');
+    });
+}
     </script>
 </body>
 </html>
