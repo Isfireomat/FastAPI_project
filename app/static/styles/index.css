@@ -66,11 +66,35 @@ main {
 }
 
 #plagiarism-result {
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.2em;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    text-align: center; /* Центрирование текста */
+    font-weight: bold; /* Жирный текст */
+    font-size: 1.2em; /* Размер шрифта */
+    margin-top: 10px; /* Отступ сверху */
+}
+
+#extra-images-header {
+    margin-top: 20px; /* Отступ сверху */
+    text-align: center; /* Центрирование заголовка */
+}
+
+#extra-images-container {
+    display: none; /* Скрываем контейнер по умолчанию */
+    margin-top: 20px; /* Отступ сверху */
+    border: 2px dotted red; /* Пунктирная красная обводка */
+    padding: 10px; /* Отступ внутри контейнера */
+    border-radius: 5px; /* Скругление углов */
+    width: 90%; /* Ширина контейнера */
+}
+
+#extra-images {
+    display: flex;
+    flex-direction: column; /* Вертикальное расположение изображений */
+    align-items: center; /* Центрирование изображений */
+}
+
+.extra-thumbnail {
+    width: 100%; /* Ширина изображения под 100% */
+    height: auto; /* Авто-высота для сохранения пропорций */
+    max-width: 100%; /* Максимальная ширина изображения равна ширине контейнера */
+    margin: 5px 0; /* Отступы между изображениями */
 }

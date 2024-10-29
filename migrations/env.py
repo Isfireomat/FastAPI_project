@@ -1,20 +1,18 @@
-from os import environ
+import os
 from alembic import context
-from dotenv import load_dotenv
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from app.api.models import Base
 
-load_dotenv()
 config = context.config
 
 section=config.config_ini_section
-config.set_section_option(section,"DB_HOST",environ.get("DB_HOST"))
-config.set_section_option(section,"DB_PORT",environ.get("DB_PORT"))
-config.set_section_option(section,"DB_USER",environ.get("DB_USER"))
-config.set_section_option(section,"DB_PASS",environ.get("DB_PASS"))
-config.set_section_option(section,"DB_NAME",environ.get("DB_NAME"))
+config.set_section_option(section,"DB_HOST",os.getenv("DB_HOST"))
+config.set_section_option(section,"DB_PORT",os.getenv("DB_PORT"))
+config.set_section_option(section,"DB_USER",os.getenv("DB_USER"))
+config.set_section_option(section,"DB_PASS",os.getenv("DB_PASS"))
+config.set_section_option(section,"DB_NAME",os.getenv("DB_NAME"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

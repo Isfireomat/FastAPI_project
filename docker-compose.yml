@@ -1,0 +1,32 @@
+version: "3.9"
+
+services: 
+  app:
+    build: .
+    container_name: My_FastAPI_project
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_USER: "postgres"
+      DB_PASS: "123456789"
+      DB_NAME: "my_db"
+      SECRET: "SECRET_key" 
+    volumes: 
+      - .:/app
+    
+  db:
+    image: postgres:14
+    container_name: postgres_Db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456789
+      POSTGRES_DB: my_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data  
+  
+volumes:
+  pgdata:

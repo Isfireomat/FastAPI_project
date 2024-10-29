@@ -1,0 +1,7 @@
+Start:
+    docker-compose up --build
+    
+Make migrations:
+    docker-compose exec app pip install alembic 
+    docker-compose exec app pip install psycopg2 
+    docker-compose exec app python -m alembic upgrade head
