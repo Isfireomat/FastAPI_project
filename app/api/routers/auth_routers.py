@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import timedelta
 from typing import Any
-from app.api import db_crud, schemas
-from app.api.db_connect import get_session
-from app.api import token_utils
+from app.api.db_utils import db_crud
+from app.api.models import schemas
+from app.api.db_utils.db_connect import get_session
+from app.api.utils import token_utils
 
 router = APIRouter()
 @router.post("/api/register/", response_model=dict[str, str])

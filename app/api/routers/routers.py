@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
-from app.api.token_utils import get_current_user
+from app.api.utils.token_utils import get_current_user
 
 router = APIRouter()
 

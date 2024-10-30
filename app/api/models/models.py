@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
-from typing import Optional
 
 Base = declarative_base()
 

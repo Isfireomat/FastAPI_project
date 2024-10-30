@@ -8,12 +8,15 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - cache
     environment:
       DB_HOST: "db"
       DB_PORT: "5432"
       DB_USER: "postgres"
       DB_PASS: "123456789"
       DB_NAME: "my_db"
+      REDIS_HOST: "cache"
+      REDIS_PORT: "6379"
       SECRET: "SECRET_key" 
     volumes: 
       - .:/app
@@ -28,5 +31,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data  
   
+  cache:
+    image: redis:latest
+    container_name: redis_container
+    restart: always
+    ports:
+     - "6379:6379"
+    volumes:
+     - redis_data:/data
+
 volumes:
   pgdata:
+  redis_data:

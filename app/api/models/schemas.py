@@ -3,7 +3,7 @@ from pydantic import BaseModel,EmailStr
 class SQLAlchemyStandart(BaseModel):
     id:int
     class Config:
-        orm_mode=True
+        from_attributes=True
 
 class EmailPasswordRequestForm(BaseModel):
     email: EmailStr

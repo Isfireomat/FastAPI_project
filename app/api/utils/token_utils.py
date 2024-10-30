@@ -3,8 +3,8 @@ from fastapi import Depends, HTTPException, status, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import JWTError, jwt
-from app.api.db_crud import get_user
-from app.api.db_connect import get_session
+from app.api.db_utils.db_crud import get_user
+from app.api.db_utils.db_connect import get_session
 from typing import Optional, Dict, Any
 
 SECRET_KEY = "This_is_your_secret_key"

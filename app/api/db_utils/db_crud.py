@@ -3,7 +3,7 @@ from sqlalchemy.future import select
 from sqlalchemy import insert
 from pydantic import EmailStr
 from passlib.context import CryptContext
-from app.api import models, schemas
+from app.api.models import models, schemas
 from typing import Optional, Any
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
