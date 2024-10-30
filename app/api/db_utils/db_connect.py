@@ -10,6 +10,13 @@ engine = create_async_engine(DATABASE_URL)
 async_session_local = sessionmaker(bind=engine,class_=AsyncSession)
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    """
+    Возвращает сессию psql и при ошибке в работе с сессией
+    откатывает изменения
+    
+    session - сессия подключения к БД
+    возвращаем session
+    """
     async with async_session_local() as session:
         try:
             yield session

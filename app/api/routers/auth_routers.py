@@ -11,6 +11,9 @@ router = APIRouter()
 @router.post("/api/register/", response_model=dict[str, str])
 async def register(response: Response, user: schemas.UserWithPassword,
                    session: AsyncSession = Depends(get_session)) -> dict[str, str]:
+    """
+    Эндпоин регистрации
+    """
     db_user = await db_crud.get_user(session, user_email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -31,6 +34,9 @@ async def register(response: Response, user: schemas.UserWithPassword,
 @router.post("/api/login", response_model=schemas.Token)
 async def login(response: Response, form_data: schemas.EmailPasswordRequestForm,
                 session: AsyncSession = Depends(get_session)) -> dict[str, Any]:
+    """
+    Эндпоин авторизации
+    """
     user = await db_crud.get_user(session, user_email=form_data.email)
     if not user or not db_crud.pwd_context.verify(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -57,5 +63,8 @@ async def login(response: Response, form_data: schemas.EmailPasswordRequestForm,
 
 @router.post("/api/logout/")
 async def logout(response: Response) -> dict[str, str]:
+    """
+    Эндпоинт выхода
+    """
     response.delete_cookie("access_token")
     return {"message": "Logout successful"}

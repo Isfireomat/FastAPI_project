@@ -18,6 +18,12 @@ async def upload_photo(response: Response,
                        photo: UploadFile = File(...),
                        session: AsyncSession = Depends(get_session),
                        client: Redis = Depends(get_client)) -> dict[str, Optional[str]]:
+    """
+    Эндпоин загрузки фотографии
+
+    Тут фотография сравнивается с прочими в БД или кеше 
+    Возвращает результат сравнения
+    """
     content: bytes = await photo.read()
     result: Optional[list[float | bytes]] = await redis_crud.get_picture_result(client, content)
     if result: 

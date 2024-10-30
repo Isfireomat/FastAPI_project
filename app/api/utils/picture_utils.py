@@ -2,16 +2,28 @@ from PIL import Image
 import io
 
 def image_to_bytes(image_path):
+    """
+    Перевод картинки в байты
+    Возвращает байты
+    """
     with Image.open(image_path) as img:
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format='PNG')
         return img_byte_arr.getvalue()
 
 def bytes_to_image(image_bytes):
+    """
+    Перевод байтов в картинку
+    Возвращает картинку
+    """
     img_byte_arr = io.BytesIO(image_bytes)
     return Image.open(img_byte_arr)
 
-def compare_images(img1: bytes, img2: bytes) -> float:    
+def compare_images(img1: bytes, img2: bytes) -> float:
+    """
+    Сравнение двух картинок между собой
+    Возвращает процент схожести
+    """    
     img1 = bytes_to_image(img1)
     img2 = bytes_to_image(img2)
     

@@ -14,11 +14,19 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 redirect_to_login = lambda: RedirectResponse(url="/login")
 
 async def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+    """
+    Создаёт токен
+    """
     to_encode: Dict[str, Any] = data.copy()
     to_encode.update({"exp": datetime.utcnow() + (expires_delta or timedelta(minutes=15))})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 async def get_current_user(request: Request, session: AsyncSession = Depends(get_session)) -> Optional[Any]:
+    """
+    Возвращает пользователя по токену, либо отправляет на страницу 
+    авторизации, если есть проблемы с токеном или пользователя
+    не существует 
+    """
     token: Optional[str] = request.cookies.get("access_token")
     if not token:
         return redirect_to_login()

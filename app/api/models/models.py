@@ -4,6 +4,9 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class User(Base):
+    """
+    Модель пользователя
+    """ 
     __tablename__ = 'users'
     
     id: int = Column(Integer, primary_key=True) 
@@ -12,6 +15,9 @@ class User(Base):
     hashed_password: str = Column(String, nullable=False)
 
 class Picture(Base):
+    """
+    Модель картинок
+    """ 
     __tablename__ = 'pictures'
     
     id: int = Column(Integer, primary_key=True) 
