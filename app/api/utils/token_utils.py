@@ -51,13 +51,16 @@ async def get_current_user(request: Request,
         if not refresh_token:  
             return None
         refresh_token = refresh_token.split(" ")[1] if " " in refresh_token else refresh_token
-        refresh_payload: Dict[str, Any] = jwt.decode(refresh_token, 
-                                                        SECRET_KEY, 
-                                                        algorithms=[ALGORITHM])
-        refresh_user_email: Optional[str] = refresh_payload.get("sub")
-        refresh_exp: datetime = datetime.fromtimestamp(refresh_payload.get("exp"),
-                                                        tz=timezone.utc)
-        if not refresh_exp or refresh_exp < datetime.now(timezone.utc):
+        try:
+            refresh_payload: Dict[str, Any] = jwt.decode(refresh_token, 
+                                                            SECRET_KEY, 
+                                                            algorithms=[ALGORITHM])
+            refresh_user_email: Optional[str] = refresh_payload.get("sub")
+            refresh_exp: datetime = datetime.fromtimestamp(refresh_payload.get("exp"),
+                                                            tz=timezone.utc)
+            if not refresh_exp or refresh_exp < datetime.now(timezone.utc):
+                return None
+        except JWTError:
             return None
         access_token = await create_access_token(data={"sub": refresh_user_email}, 
                                                         expires_delta=ACCESS_TOKEN_EXPIRE_MINUTES)

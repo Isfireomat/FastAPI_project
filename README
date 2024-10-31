@@ -1,3 +1,9 @@
+This is a test project for learning FastAPI.
+The essence: the program compares a uploaded image pixel by pixel with 
+other images in the database.
+Images are cached in Redis to reduce the number of database queries.
+Authorization is also implemented through JWT tokens.
+
 Start:
     docker-compose up --build
     
