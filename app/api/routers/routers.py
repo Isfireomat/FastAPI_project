@@ -7,10 +7,6 @@ router = APIRouter()
 
 templates = Jinja2Templates(directory="app/templates")
 
-@router.get("/set-cookie/")
-async def set_cookie(response: Response,request: Request):
-    return templates.TemplateResponse("index.html", {"request": request}, headers=response.headers)
-
 @router.get("/", response_class=HTMLResponse)
 async def login_page(response: Response,
                      request: Request, 

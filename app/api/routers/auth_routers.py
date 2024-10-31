@@ -85,4 +85,5 @@ async def logout(response: Response) -> dict[str, str]:
     Эндпоинт выхода
     """
     response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
     return {"message": "Logout successful"}

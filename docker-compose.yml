@@ -39,6 +39,25 @@ services:
      - "6379:6379"
     volumes:
      - redis_data:/data
+  
+  test:
+    image: tiangolo/uvicorn-gunicorn-fastapi:python3.11
+    build: . 
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - cache
+    environment:
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_USER: "postgres"
+      DB_PASS: "123456789"
+      DB_NAME: "my_db"
+      REDIS_HOST: "cache"
+      REDIS_PORT: "6379"
+      SECRET_KEY: "SECRET_key" 
+    command: ["pytest", "--disable-warnings", "-q"]
 
 volumes:
   pgdata:
