@@ -44,6 +44,9 @@ async def get_current_user(request: Request,
     не существует 
     """
     async def get_access_token_from_refresh_token(request: Request, response: Response):
+        """
+        Функция для получения access_token через refresh_token
+        """
         refresh_token: Optional[str] = request.cookies.get("refresh_token")
         if not refresh_token:  
             return None
