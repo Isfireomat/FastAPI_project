@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from app.api.utils.token_utils import get_current_user
@@ -7,12 +7,17 @@ router = APIRouter()
 
 templates = Jinja2Templates(directory="app/templates")
 
+@router.get("/set-cookie/")
+async def set_cookie(response: Response,request: Request):
+    return templates.TemplateResponse("index.html", {"request": request}, headers=response.headers)
+
 @router.get("/", response_class=HTMLResponse)
-async def login_page(request: Request, 
+async def login_page(response: Response,
+                     request: Request, 
                      user: dict | RedirectResponse = Depends(get_current_user)) -> HTMLResponse:
     if isinstance(user, RedirectResponse):
         return user 
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request}, headers=response.headers)
 
 @router.get("/registration", response_class=HTMLResponse)
 async def registration_page(request: Request) -> HTMLResponse:

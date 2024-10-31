@@ -17,7 +17,7 @@ services:
       DB_NAME: "my_db"
       REDIS_HOST: "cache"
       REDIS_PORT: "6379"
-      SECRET: "SECRET_key" 
+      SECRET_KEY: "SECRET_key" 
     volumes: 
       - .:/app
     

@@ -18,16 +18,25 @@ async def register(response: Response, user: schemas.UserWithPassword,
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     await db_crud.create_user(session=session, user=user)
-    access_token_expires = timedelta(minutes=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token = await token_utils.create_refresh_token(data={"sub": user.email}, 
+                                                         expires_delta=token_utils.REFRESH_TOKEN_EXPIRE_MINUTES)
     access_token = await token_utils.create_access_token(data={"sub": user.email}, 
-                                                         expires_delta=access_token_expires)
+                                                         expires_delta=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES)
     response.set_cookie(
         key="access_token",
         value=f"Bearer {access_token}",
         httponly=True,
         secure=True,
         samesite="lax",
-        max_age=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        max_age=int(token_utils.ACCESS_TOKEN_EXPIRE_MINUTES.total_seconds())
+    )
+    response.set_cookie(
+        key="refresh_token",
+        value=f"Bearer {refresh_token}",
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=int(token_utils.REFRESH_TOKEN_EXPIRE_MINUTES.total_seconds())
     )
     return {"message": "User registered successfully!"}
 
@@ -44,16 +53,25 @@ async def login(response: Response, form_data: schemas.EmailPasswordRequestForm,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"}
         )
-    access_token_expires = timedelta(minutes=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token = await token_utils.create_refresh_token(data={"sub": user.email}, 
+                                                         expires_delta=token_utils.REFRESH_TOKEN_EXPIRE_MINUTES)
     access_token = await token_utils.create_access_token(data={"sub": user.email}, 
-                                                         expires_delta=access_token_expires)
+                                                         expires_delta=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES)
     response.set_cookie(
         key="access_token",
         value=f"Bearer {access_token}",
         httponly=True,
         secure=True,
         samesite="lax",
-        max_age=token_utils.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        max_age=int(token_utils.ACCESS_TOKEN_EXPIRE_MINUTES.total_seconds())
+    )
+    response.set_cookie(
+        key="refresh_token",
+        value=f"Bearer {refresh_token}",
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=int(token_utils.REFRESH_TOKEN_EXPIRE_MINUTES.total_seconds())
     )
     return {
         "access_token": access_token,
