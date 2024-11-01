@@ -7,7 +7,6 @@ services:
     depends_on:
       - db
       - cache
-      - test
     environment:
       DB_HOST: "db"
       DB_PORT: "5432"
@@ -58,8 +57,7 @@ services:
       SECRET_KEY: "SECRET_key" 
       PYTHONPATH: /app
     entrypoint: ["sh", "-c", "poetry run pytest --disable-warnings -q"]
-    restart: "no"
-    
+
 volumes:
   pgdata:
   redis_data:

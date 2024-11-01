@@ -5,7 +5,10 @@ Images are cached in Redis to reduce the number of database queries.
 Authorization is also implemented through JWT tokens.
 
 Start:
-    docker-compose up --build --abort-on-container-exit
+    docker-compose up --build
+
+Tested:
+    docker-compose run test
     
 Make migrations:
     docker-compose exec app pip install alembic 
