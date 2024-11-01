@@ -8,8 +8,8 @@ from app.api.db_utils.db_connect import get_session
 from app.api.utils import token_utils
 
 router = APIRouter()
-@router.post("/api/register/", response_model=dict[str, str])
-async def register(response: Response, user: schemas.UserWithPassword,
+@router.post("/api/registration/", response_model=dict[str, str])
+async def registration(response: Response, user: schemas.UserWithPassword,
                    session: AsyncSession = Depends(get_session)) -> dict[str, str]:
     """
     Эндпоин регистрации
@@ -38,7 +38,12 @@ async def register(response: Response, user: schemas.UserWithPassword,
         samesite="lax",
         max_age=int(token_utils.REFRESH_TOKEN_EXPIRE_MINUTES.total_seconds())
     )
-    return {"message": "User registered successfully!"}
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "message": "Registration successful"
+    }
 
 @router.post("/api/login", response_model=schemas.Token)
 async def login(response: Response, form_data: schemas.EmailPasswordRequestForm,
@@ -75,6 +80,7 @@ async def login(response: Response, form_data: schemas.EmailPasswordRequestForm,
     )
     return {
         "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer",
         "message": "Login successful"
     }

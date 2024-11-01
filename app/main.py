@@ -7,9 +7,9 @@ import asyncio
 app:FastAPI=FastAPI(title='Tested_FastAPI_Project')
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-asyncio.run(create_start_table())
-
 app.include_router(routers.router)
 app.include_router(auth_routers.router)
 app.include_router(photo_routers.router)
 
+if __name__=="__main__":
+    asyncio.run(create_start_table())
