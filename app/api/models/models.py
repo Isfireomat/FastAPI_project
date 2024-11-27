@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, LargeBinary
+from sqlalchemy import Column, Integer, String, \
+                       LargeBinary, Boolean, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -11,8 +13,10 @@ class User(Base):
     
     id: int = Column(Integer, primary_key=True) 
     email: str = Column(String, nullable=False, unique=True)  
+    is_super: bool = Column(Boolean, nullable=False, default=False)
     name: str = Column(String, nullable=False)
     hashed_password: str = Column(String, nullable=False)
+    pictures = relationship("Picture", back_populates="user")
 
 class Picture(Base):
     """
@@ -21,4 +25,8 @@ class Picture(Base):
     __tablename__ = 'pictures'
     
     id: int = Column(Integer, primary_key=True) 
-    binary_picture: bytes = Column(LargeBinary, nullable=False) 
+    binary_picture: bytes = Column(LargeBinary, nullable=False)
+    title: str = Column(String, nullable=False)
+    user_id: int = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", back_populates="pictures",  lazy='joined')
+    is_active: bool = Column(Boolean, default=False)

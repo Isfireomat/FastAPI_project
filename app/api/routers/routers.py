@@ -22,3 +22,11 @@ async def registration_page(request: Request) -> HTMLResponse:
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("login.html", {"request": request})
+
+@router.get("/pictures", response_class=HTMLResponse)
+async def login_page(request: Request,
+                     response: Response,
+                     user: dict | RedirectResponse = Depends(get_current_user)) -> HTMLResponse:
+    if isinstance(user, RedirectResponse):
+        return user 
+    return templates.TemplateResponse("pictures.html", {"request": request}, headers=response.headers)

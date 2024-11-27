@@ -8,6 +8,15 @@ from app.api.db_utils.db_connect import get_session
 from app.api.utils import token_utils
 
 router = APIRouter()
+@router.post("/api/create_admin",response_model=dict[str, str])
+async def registration(response: Response, user: schemas.UserWithPassword,
+                   session: AsyncSession = Depends(get_session)) -> dict[str, str]:
+    db_user = await db_crud.get_user(session, user_email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    await db_crud.create_user(session=session, user=user, is_super=True)
+    return {"message":"admin created"}
+
 @router.post("/api/registration/", response_model=dict[str, str])
 async def registration(response: Response, user: schemas.UserWithPassword,
                    session: AsyncSession = Depends(get_session)) -> dict[str, str]:

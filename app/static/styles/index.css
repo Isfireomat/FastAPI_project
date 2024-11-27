@@ -21,6 +21,7 @@ header {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-right: 10px;
 }
 
 .logout-button:hover {
@@ -37,8 +38,9 @@ main {
 }
 
 #drop-area {
-    width: 90%; /* Ширина области загрузки */
-    height: 80vh; /* Высота области загрузки (80% высоты окна) */
+    width: 500px; /* Ширина области загрузки */
+    height: auto;
+    display: inline-flex;
     border: 2px dashed #4CAF50; /* Цвет обводки */
     border-radius: 10px;
     margin: 20px;
@@ -61,8 +63,10 @@ main {
 .thumbnail {
     width: 100%; /* Ширина миниатюры */
     height: 100%; /* Высота миниатюры */
-    object-fit: cover; /* Сохранение пропорций и заполнение области */
+    object-fit: contain; /* Сохранение пропорций и заполнение области */
     display: none; /* Скрываем миниатюру по умолчанию */
+    max-width: 500px; /* Максимальная ширина */
+    max-height: 500px; /* Максимальная высота */
 }
 
 #plagiarism-result {
@@ -78,12 +82,13 @@ main {
 }
 
 #extra-images-container {
+    width: 500px; /* Ширина области загрузки */
+    height: auto;
     display: none; /* Скрываем контейнер по умолчанию */
     margin-top: 20px; /* Отступ сверху */
     border: 2px dotted red; /* Пунктирная красная обводка */
     padding: 10px; /* Отступ внутри контейнера */
     border-radius: 5px; /* Скругление углов */
-    width: 90%; /* Ширина контейнера */
 }
 
 #extra-images {
@@ -95,6 +100,7 @@ main {
 .extra-thumbnail {
     width: 100%; /* Ширина изображения под 100% */
     height: auto; /* Авто-высота для сохранения пропорций */
-    max-width: 100%; /* Максимальная ширина изображения равна ширине контейнера */
+    max-width: 500px; /* Максимальная ширина */
+    max-height: 500px; /* Максимальная высота */
     margin: 5px 0; /* Отступы между изображениями */
 }

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список картинок</title>
+    <link rel="stylesheet" href="/static/styles/index.css?v=1.0.5">
+</head>
+<body>
+    <header>
+        <a href="/pictures?mod=my"> 
+            <button class="logout-button">Мои картинки</button>
+        </a>
+        <a href="/pictures?mod=all"> 
+            <button class="logout-button">Все картинки</button>
+        </a>
+        <a href="/pictures?mod=request"> 
+            <button class="logout-button">Запросы</button>
+        </a>
+        <button class="logout-button" onclick="logout()">Выход</button>
+    </header>
+
+    <main>
+        <h1>Список картинок</h1>
+        <div id="image-list-container">
+            <!-- Здесь будут отображаться картинки -->
+        </div>
+    </main>
+
+    <script src="/static/scripts/logout.js"></script>
+    <script src="/static/scripts/photo.js"></script>
+    <script>
+    // Функция для отображения картинок
+    function displayImages(images, admin=false) {
+        const container = document.getElementById('image-list-container');
+
+        // Очистка контейнера перед добавлением новых элементов
+        container.innerHTML = '';
+
+        // Для каждой картинки из массива создаем HTML элемент
+        images.forEach(image => {
+            const imageItem = document.createElement('div');
+            imageItem.classList.add('image-item');
+
+            const imageElement = document.createElement('img');
+            imageElement.src = 'data:image/jpeg;base64,' + image.src;
+            imageElement.classList.add('extra-thumbnail');
+            imageElement.alt = image.title;
+
+            const titleElement = document.createElement('h3');
+            titleElement.textContent = image.title;
+
+            const authorElement = document.createElement('p');
+            authorElement.textContent = 'Автор: ' + image.author;
+
+            // Проверяем, если метод из JSON запроса == True
+            if (image.request === true) {
+                // Создаем кнопки "одобрить" и "запретить"
+                const approveButton = document.createElement('button');
+                approveButton.textContent = 'Одобрить';
+                approveButton.classList.add('logout-button');
+                approveButton.onclick = function() {
+                    // Логика для одобрения
+                    alert('Картинка одобрена');
+                };
+
+                const rejectButton = document.createElement('button');
+                rejectButton.textContent = 'Запретить';
+                rejectButton.classList.add('logout-button');
+                rejectButton.onclick = function() {
+                    // Логика для запрета
+                    alert('Картинка запрещена');
+                };
+
+                // Добавляем кнопки в элемент
+                imageItem.appendChild(approveButton);
+                imageItem.appendChild(rejectButton);
+            }
+
+            // Добавляем остальные элементы
+            imageItem.appendChild(imageElement);
+            imageItem.appendChild(titleElement);
+            imageItem.appendChild(authorElement);
+
+            container.appendChild(imageItem);
+        });
+    }
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const paramsObject = Object.fromEntries(queryParams.entries());
+
+    fetch('api/pictures', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(paramsObject),
+    })
+    .then(response => response.json())
+    .then(data => { displayImages(data.images); });
+    </script>   
+</body>
+</html>

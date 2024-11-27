@@ -9,15 +9,69 @@ from app.api.redis_utils import redis_crud
 from app.api.db_utils import db_crud
 from app.api.models import schemas
 from base64 import b64encode
-from typing import Optional
+from typing import Optional, Union, List, Dict
+from app.api.utils.token_utils import get_current_user
+from app.api.models.schemas import QueryParams, ImageResponse
+from app.api.models.models import User, Picture
+from sqlalchemy.future import select
+from sqlalchemy import insert
+from fastapi.responses import RedirectResponse
 
 router = APIRouter()
+
+@router.post("/api/pictures",response_model=ImageResponse)
+async def pictures(response: Response,
+                   query_params: QueryParams,
+                   session: AsyncSession = Depends(get_session),
+                   client: Redis = Depends(get_client),
+                   user: dict = Depends(get_current_user)) ->List[Dict[str, Union[str, bool]]]:
+    match query_params.mod:
+        case "all":
+            result = await session.execute(select(Picture).where(Picture.is_active==False)) 
+            pictures = result.scalars().all()
+            pictures_json = [
+                {"src": b64encode(picture.binary_picture).decode('utf-8'), 
+                 "title": picture.title, 
+                 "author": picture.user.name if picture.user else "Unknown",
+                 "request":False} 
+                for picture in pictures
+            ]
+            return {"images":pictures_json}
+        case "my":
+            result = await session.execute(select(Picture).where(Picture.is_active==True, 
+                                                                 Picture.user_id==user.id)) 
+            pictures = result.scalars().all()
+            pictures_json = [
+                {"src": b64encode(picture.binary_picture).decode('utf-8'), 
+                 "title": picture.title, 
+                 "author": picture.user.name if picture.user else "Unknown",
+                 "request":False} 
+                for picture in pictures
+            ]
+            return {"images":pictures_json}
+        case "request":
+            if not user.is_super:
+                return RedirectResponse(url="/pictures?mod=all", status_code=303)
+            result = await session.execute(select(Picture).where(Picture.is_active==False)) 
+            pictures = result.scalars().all()
+            pictures_json = [
+                {"src": b64encode(picture.binary_picture).decode('utf-8'), 
+                 "title": picture.title, 
+                 "author": picture.user.name,
+                 "request":True,
+                 "id": picture.id} 
+                for picture in pictures
+            ]
+            return {"images":pictures_json}
+    return RedirectResponse(url="/pictures?mod=all", status_code=303)
+
 
 @router.post("/api/upload")
 async def upload_photo(response: Response,
                        photo: UploadFile = File(...),
                        session: AsyncSession = Depends(get_session),
-                       client: Redis = Depends(get_client)) -> dict[str, Optional[str]]:
+                       client: Redis = Depends(get_client),
+                       user: dict = Depends(get_current_user)) -> dict[str, Optional[str]]:
     """
     Эндпоин загрузки фотографии
 
@@ -42,12 +96,12 @@ async def upload_photo(response: Response,
         await redis_crud.set_picture(client, content, result, 10)
         picture = await db_crud.get_picture_by_bytes(session, content)
         if not picture:
-            await db_crud.create_picture(session, schemas.Picture(binary_picture=content))
+            await db_crud.create_picture(session, schemas.Picture(binary_picture=content, title=photo.filename, user_id=user.id))
         if round(result[0], 2) == 0:
             return {"result": f"{result[0]:.2f}"}  
         return {
             "result": f"{result[0]:.2f}", 
             "picture": b64encode(result[1]).decode('utf-8')
         }
-    await db_crud.create_picture(session, schemas.Picture(binary_picture=content))
+    await db_crud.create_picture(session, schemas.Picture(binary_picture=content, title=photo.filename, user_id=user.id ))
     return {"result": "0"}

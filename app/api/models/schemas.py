@@ -1,5 +1,9 @@
+from typing import List, Dict,Union
 from pydantic import BaseModel,EmailStr
-
+class ImageResponse(BaseModel):
+    images: List[Dict[str, Union[str, bool]]]
+class QueryParams(BaseModel):
+    mod: str
 class SQLAlchemyStandart(BaseModel):
     """
     Тут то, что есть во всех таблицах БД
@@ -34,6 +38,8 @@ class Picture(BaseModel):
     """
     Валидация картинок
     """ 
+    title: str
+    user_id: int
     binary_picture:bytes
 
 class Token(BaseModel):

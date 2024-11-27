@@ -14,14 +14,15 @@ async def get_password_hash(password: str) -> str:
     """ 
     return pwd_context.hash(password)
 
-async def create_user(session: AsyncSession, user: schemas.UserWithPassword) -> None:  
+async def create_user(session: AsyncSession, user: schemas.UserWithPassword, is_super=False) -> None:  
     """
     Вносим в БД пользователя
     """ 
     stmt = insert(models.User).values(
         email=user.email,
         name=user.name,  
-        hashed_password=await get_password_hash(user.password)
+        hashed_password=await get_password_hash(user.password),
+        is_super=is_super
     )
     await session.execute(stmt)
     await session.commit()
@@ -30,7 +31,9 @@ async def create_picture(session: AsyncSession, picture: schemas.Picture) -> Non
     """
     Вноси в БД картинку
     """ 
-    stmt = insert(models.Picture).values(binary_picture=picture.binary_picture)
+    stmt = insert(models.Picture).values(binary_picture=picture.binary_picture,
+                                         title=picture.title,
+                                         user_id=picture.user_id)
     await session.execute(stmt) 
     await session.commit()
 
