@@ -1,7 +1,11 @@
 from typing import List, Dict,Union
 from pydantic import BaseModel,EmailStr
+
+class approveResponse(BaseModel):
+    id: int
+    approve: bool
 class ImageResponse(BaseModel):
-    images: List[Dict[str, Union[str, bool]]]
+    images: List[Dict[str, Union[str, bool, int]]]
 class QueryParams(BaseModel):
     mod: str
 class SQLAlchemyStandart(BaseModel):

@@ -60,7 +60,13 @@
                 approveButton.textContent = 'Одобрить';
                 approveButton.classList.add('logout-button');
                 approveButton.onclick = function() {
-                    // Логика для одобрения
+                     fetch('api/approve', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({"id": image.id, "approve":true}),
+                     })
+                     .then(response => response.json())
+                     .then(data => { location.reload(); });
                     alert('Картинка одобрена');
                 };
 
@@ -68,7 +74,13 @@
                 rejectButton.textContent = 'Запретить';
                 rejectButton.classList.add('logout-button');
                 rejectButton.onclick = function() {
-                    // Логика для запрета
+                    fetch('api/approve', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({"id": image.id, "approve":false}),
+                     })
+                     .then(response => response.json())
+                     .then(data => { location.reload(); });
                     alert('Картинка запрещена');
                 };
 

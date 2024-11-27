@@ -25,7 +25,7 @@ class Picture(Base):
     __tablename__ = 'pictures'
     
     id: int = Column(Integer, primary_key=True) 
-    binary_picture: bytes = Column(LargeBinary, nullable=False)
+    binary_picture: bytes = Column(LargeBinary, nullable=False, unique=True)
     title: str = Column(String, nullable=False)
     user_id: int = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="pictures",  lazy='joined')

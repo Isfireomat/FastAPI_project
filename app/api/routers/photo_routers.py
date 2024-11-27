@@ -11,14 +11,29 @@ from app.api.models import schemas
 from base64 import b64encode
 from typing import Optional, Union, List, Dict
 from app.api.utils.token_utils import get_current_user
-from app.api.models.schemas import QueryParams, ImageResponse
+from app.api.models.schemas import QueryParams, ImageResponse, approveResponse
 from app.api.models.models import User, Picture
 from sqlalchemy.future import select
-from sqlalchemy import insert
+from sqlalchemy import insert, update, delete
 from fastapi.responses import RedirectResponse
 
 router = APIRouter()
-
+@router.post("/api/approve",response_model=Dict[str,str])
+async def approve(response: Response,
+                  approve: approveResponse,
+                  session: AsyncSession = Depends(get_session),
+                   client: Redis = Depends(get_client),
+                   user: dict = Depends(get_current_user)):
+    if approve:
+        stmt = update(Picture).where(Picture.id==int(approve.id)).values(is_active=True)
+    else:
+        stmt = delete(Picture).where(Picture.id==approve.id)
+    await session.execute(stmt)
+    await session.commit()
+    result = await session.execute(select(Picture).where(Picture.id==approve.id))
+    picture = result.scalar_one_or_none()  
+    return {'result':str(picture.is_active)}
+    
 @router.post("/api/pictures",response_model=ImageResponse)
 async def pictures(response: Response,
                    query_params: QueryParams,
@@ -27,7 +42,7 @@ async def pictures(response: Response,
                    user: dict = Depends(get_current_user)) ->List[Dict[str, Union[str, bool]]]:
     match query_params.mod:
         case "all":
-            result = await session.execute(select(Picture).where(Picture.is_active==False)) 
+            result = await session.execute(select(Picture).where(Picture.is_active==True)) 
             pictures = result.scalars().all()
             pictures_json = [
                 {"src": b64encode(picture.binary_picture).decode('utf-8'), 
