@@ -6,9 +6,6 @@ Authorization is also implemented through JWT tokens.
 
 Start:
     docker-compose up --build
-
-Tested:
-    docker-compose run test
     
 Make migrations: 
     docker-compose exec app poetry run python -m alembic upgrade head

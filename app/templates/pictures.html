@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список картинок</title>
-    <link rel="stylesheet" href="/static/styles/index.css?v=1.0.5">
+    <link rel="stylesheet" href="/static/styles/index.css?v=1.0.6">
 </head>
 <body>
     <header>
@@ -55,6 +55,7 @@
 
             const authorElement = document.createElement('p');
             authorElement.textContent = 'Автор: ' + image.author;
+            const buttonsContainer = document.createElement('div'); // Контейнер для кнопок
             if (image.is_super === true && image.request !== true)
             {
                 const approveButton = document.createElement('button');
@@ -70,7 +71,7 @@
                      .then(data => { location.reload(); });
                     alert('Картинка удалена');
                 };
-                imageItem.appendChild(approveButton);
+                buttonsContainer.appendChild(approveButton);
             }
             // Проверяем, если метод из JSON запроса == True
             if (image.request === true) {
@@ -104,15 +105,15 @@
                 };
 
                 // Добавляем кнопки в элемент
-                imageItem.appendChild(approveButton);
-                imageItem.appendChild(rejectButton);
+                buttonsContainer.appendChild(approveButton);
+                buttonsContainer.appendChild(rejectButton);
             }
 
             // Добавляем остальные элементы
             imageItem.appendChild(imageElement);
             imageItem.appendChild(titleElement);
             imageItem.appendChild(authorElement);
-
+            imageItem.appendChild(buttonsContainer);
             container.appendChild(imageItem);
         });
     }

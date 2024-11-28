@@ -104,3 +104,30 @@ main {
     max-height: 500px; /* Максимальная высота */
     margin: 5px 0; /* Отступы между изображениями */
 }
+
+.image-item {
+    display: flex;
+    flex-direction: column; /* Ставим элементы в колонку */
+    align-items: center; /* Центрируем элементы */
+    margin: 20px; /* Отступы между картинками */
+    border: 1px solid #ddd; /* Граница вокруг картинки и текста */
+    border-radius: 10px; /* Скругление углов */
+    padding: 10px; /* Внутренние отступы */
+    width: 300px; /* Фиксируем ширину карточки */
+}
+
+.image-item img {
+    width: 100%; /* Изображение занимает всю ширину контейнера */
+    border-radius: 5px; /* Скругление углов изображения */
+    margin-bottom: 10px; /* Отступ снизу от изображения */
+}
+
+.image-item h3, .image-item p, .image-item button {
+    margin: 5px 0; /* Минимальные отступы между элементами */
+    text-align: center; /* Центрирование текста */
+}
+
+.image-item button {
+    width: 90%; /* Кнопки почти на всю ширину контейнера */
+    margin-top: 10px; /* Отступ сверху */
+}
