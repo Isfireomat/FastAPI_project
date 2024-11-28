@@ -9,3 +9,6 @@ Start:
     
 Make migrations: 
     docker-compose exec app poetry run python -m alembic upgrade head
+
+Tests:
+    docker-compose exec app poetry run pytest --disable-warnings -q
