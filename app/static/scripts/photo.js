@@ -71,13 +71,20 @@ function uploadFile(file) {
     })
     .then(response => response.json())
     .then(data => {
-        // Отображаем результат плагиата
+        const plagiarismResult = document.getElementById('plagiarism-result');
+        plagiarismResult.textContent = '';
+
         if (data.result !== undefined) {
-            document.getElementById('plagiarism-result').textContent = `Плагиат на ${data.result} %`;
-        } else {
-            document.getElementById('plagiarism-result').textContent = '';
+            plagiarismResult.textContent = `Плагиат на ${data.result} %`;
+
+            // Проверка уровня плагиата
+            if (parseFloat(data.result) <= 50) {
+                addCustomButton(formData);
+            } else {
+                alert('Плагиат слишком высок, кнопка не добавлена.');
+            }
         }
-     
+
         if (data.picture) {
             extraImagesHeader.style.display = 'block';
             extraImagesContainer.style.display = 'block';
@@ -96,4 +103,31 @@ function uploadFile(file) {
         console.error('Ошибка:', error);
         alert('Произошла ошибка при загрузке.');
     });
+}
+
+function addCustomButton(formData) {
+    const baton = document.getElementById('plagiat-button');
+    baton.innerHTML = '';
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.marginTop = '10px';
+    
+    const customButton = document.createElement('button');
+    customButton.textContent = 'Отправить запрос';
+    customButton.classList = 'logout-button';
+    customButton.onclick = function() {
+        fetch('/api/request', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => { alert('Запрос отправлен');})
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при загрузке.');
+        });
+    };
+
+    buttonContainer.appendChild(customButton);
+
+    baton.appendChild(buttonContainer); // Добавляем кнопку под первую картинку
 }

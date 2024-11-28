@@ -8,6 +8,9 @@
 </head>
 <body>
     <header>
+        <a href="/"> 
+            <button class="logout-button"> Добавление</button>
+        </a>
         <a href="/pictures?mod=my"> 
             <button class="logout-button">Мои картинки</button>
         </a>
@@ -52,7 +55,23 @@
 
             const authorElement = document.createElement('p');
             authorElement.textContent = 'Автор: ' + image.author;
-
+            if (image.is_super === true && image.request !== true)
+            {
+                const approveButton = document.createElement('button');
+                approveButton.textContent = 'Удалить';
+                approveButton.classList.add('logout-button');
+                approveButton.onclick = function() {
+                     fetch('api/approve', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({"id": image.id, "approve":false}),
+                     })
+                     .then(response => response.json())
+                     .then(data => { location.reload(); });
+                    alert('Картинка удалена');
+                };
+                imageItem.appendChild(approveButton);
+            }
             // Проверяем, если метод из JSON запроса == True
             if (image.request === true) {
                 // Создаем кнопки "одобрить" и "запретить"

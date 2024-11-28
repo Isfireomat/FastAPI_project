@@ -65,6 +65,6 @@ async def get_pictures(session: AsyncSession) -> Optional[models.Picture]:
     pictures - картинки
     Возвращаем picture или None
     """ 
-    result = await session.execute(select(models.Picture.binary_picture)) 
+    result = await session.execute(select(models.Picture.binary_picture).where(models.Picture.is_active==True)) 
     pictures = result.scalars().all()
     return pictures if pictures else None

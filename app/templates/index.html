@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная страница</title>
-    <link rel="stylesheet" href="/static/styles/index.css?v=1.0.5">
+    <link rel="stylesheet" href="/static/styles/index.css?v=1.0.6">
 </head>
 <body>
     <header>
+      <a href="/"> 
+            <button class="logout-button"> Добавление</button>
+        </a>
         <a href="/pictures?mod=my"> 
             <button class="logout-button">Мои картинки</button>
         </a>
@@ -29,6 +32,7 @@
         </div>
         <p id="plagiarism-result"></p>
         
+        <div id='plagiat-button'></div>
         <h2 id="extra-images-header" style="display: none;">Сплагиаченное изображение</h2>
         <div id="extra-images-container">
             <div id="extra-images"></div>
@@ -36,6 +40,6 @@
     </main>
 
     <script src="/static/scripts/logout.js"></script>
-    <script src='/static/scripts/photo.js'></script>
+    <script src='/static/scripts/photo.js?v=1.0.8'></script>
 </body>
 </html>
